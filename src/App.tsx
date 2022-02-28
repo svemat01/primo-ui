@@ -7,6 +7,7 @@ import { NavBar } from './components/navbar/Navbar';
 import { usePersistedStore } from './hooks/stores/usePresistedStore';
 import { usePrinterStore } from './hooks/stores/usePrinterStore';
 import { Home } from './pages/Home';
+import { Printers } from './pages/Printers';
 import { GlobalStyle } from './styles/GlobalStyle';
 import { NavLinkItemType } from './types/NavItemType';
 import { getPrinterData } from './utils/getPrinterData';
@@ -17,6 +18,11 @@ export const NavLinkItems: NavLinkItemType[] = [
         id: 'home',
         path: '/',
         label: 'Home',
+    },
+    {
+        id: 'printers',
+        path: '/printers',
+        label: 'Printers',
     },
 ];
 
@@ -42,6 +48,7 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/printers" element={<Printers />} />
         </Routes>
     );
 };
@@ -82,7 +89,7 @@ export const App = () => {
 
     useEffect(() => {
         getPrinterData();
-    }, [inkThreshold, serverUrl]);
+    }, [inkThreshold]);
 
     return (
         <ThemeProvider theme={currentTheme}>

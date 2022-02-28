@@ -91,5 +91,4 @@ export const getPrinterData = async () => {
         needsRefill,
         printers,
     });
-    console.log(usePrinterStore.getState());
 };

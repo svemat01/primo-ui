@@ -16,6 +16,7 @@ type Columns = {
 type Data = ({
     name: string;
     model: string;
+    needsRefill: string;
 } & {
     [key in PrinterColor]?: string;
 })[];
@@ -198,7 +199,7 @@ const Table = (properties: { columns: Columns; data: Data }) => {
     );
 };
 
-export const RefillTable = () => {
+export const PrintersTable = () => {
     const columns = useMemo(
         () => [
             {
@@ -233,6 +234,10 @@ export const RefillTable = () => {
                         Header: 'Yellow',
                         accessor: 'yellow',
                     },
+                    {
+                        Header: 'Needs Refill',
+                        accessor: 'needsRefill',
+                    },
                 ],
             },
         ],
@@ -245,21 +250,34 @@ export const RefillTable = () => {
     const data = useMemo(() => {
         const data: Data = [];
 
-        for (const printerName of needsRefill) {
-            const printer = printers[printerName];
+        for (const [printerName, printerData] of Object.entries(printers)) {
+            console.log({ printerName, printerData });
+
+            let black;
+            let cyan;
+            let magenta;
+            let yellow;
+
+            if (printerData.colors) {
+                black = printerData.colors.black?.toString();
+                cyan = printerData.colors.cyan?.toString();
+                magenta = printerData.colors.magenta?.toString();
+                yellow = printerData.colors.yellow?.toString();
+            }
 
             data.push({
                 name: printerName ?? 'Null',
-                model: printer.type,
-                black: printer.colors.black?.toString() ?? 'Null',
-                cyan: printer.colors.cyan?.toString() ?? 'Null',
-                magenta: printer.colors.magenta?.toString() ?? 'Null',
-                yellow: printer.colors.yellow?.toString() ?? 'Null',
+                model: printerData.type,
+                black: black ?? '',
+                cyan: cyan ?? '',
+                magenta: magenta ?? '',
+                yellow: yellow ?? '',
+                needsRefill: needsRefill.includes(printerName) ? 'Yes' : 'No',
             });
         }
 
         return data;
-    }, [needsRefill]);
+    }, [printers]);
 
     return (
         <Styles>

@@ -39,8 +39,6 @@ const Table = styled.table`
 `;
 
 export const Home: FC = () => {
-    document.title = 'Home';
-
     const theme = useTheme();
 
     const onlinePrinters = usePrinterStore((state) => state.onlinePrinters);

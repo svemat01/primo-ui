@@ -7,6 +7,10 @@ import { useSettingStore } from '../../../hooks/stores/useSettingStore';
 const Li = styled.li`
     display: flex;
     align-items: center;
+
+    :hover {
+        cursor: pointer;
+    }
 `;
 
 export const NavSettingsItem: FC<{}> = () => {
