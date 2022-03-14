@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
-import styled from 'styled-components';
+import { useSortBy, useTable } from 'react-table';
+import styled, { useTheme } from 'styled-components';
 
 import { usePrinterStore } from '../hooks/stores/usePrinterStore';
 import { PrinterColor } from '../types/PrinterDataType';
+import { TableStyle } from './TableStyle';
 
 type Columns = {
     Header: string;
@@ -53,13 +54,19 @@ const Styles = styled.div`
             }
         }
 
-        tr:first-child th {
-            :first-child {
-                border-top-left-radius: 0.8rem;
+        tr:first-child {
+            th {
+                :first-child {
+                    border-top-left-radius: 0.8rem;
+                }
+
+                :nth-child(2) {
+                    border-top-right-radius: 0.8rem;
+                }
             }
 
-            :nth-child(2) {
-                border-top-right-radius: 0.8rem;
+            td {
+                border-top: 0 !important;
             }
         }
 
@@ -71,6 +78,8 @@ const Styles = styled.div`
 
             :nth-child(n + 3) {
                 text-align: center;
+                border-top: 1px solid
+                    ${({ theme }) => theme.palette.secondary.default};
             }
         }
 
@@ -107,6 +116,8 @@ const Styles = styled.div`
                     border-top-right-radius: 0.8rem;
                 }
                 td {
+                    border-top: 0 !important;
+
                     :nth-child(2) {
                         border-right: 0;
                     }
@@ -130,7 +141,9 @@ const Styles = styled.div`
     }
 `;
 const Table = (properties: { columns: Columns; data: Data }) => {
-    const tableInstance = useTable(properties);
+    const tableInstance = useTable(properties, useSortBy);
+
+    const theme = useTheme();
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         tableInstance;
@@ -148,11 +161,22 @@ const Table = (properties: { columns: Columns; data: Data }) => {
                                 // Loop over the headers in each row
                                 headerGroup.headers.map((column) => (
                                     // Apply the header cell props
-                                    <th {...column.getHeaderProps()}>
+                                    <th
+                                        {...column.getHeaderProps(
+                                            column.getSortByToggleProps()
+                                        )}
+                                    >
                                         {
                                             // Render the header
                                             column.render('Header')
                                         }
+                                        <span>
+                                            {column.isSorted
+                                                ? (column.isSortedDesc
+                                                    ? ' ▼'
+                                                    : ' ▲')
+                                                : ''}
+                                        </span>
                                     </th>
                                 ))
                             }
@@ -168,12 +192,70 @@ const Table = (properties: { columns: Columns; data: Data }) => {
                         // Prepare the row for display
                         prepareRow(row);
 
+                        let offline = false;
+
+                        if (
+                            !row.original.black &&
+                            !row.original.yellow &&
+                            !row.original.cyan &&
+                            !row.original.magenta
+                        ) {
+                            offline = true;
+                        }
+
                         return (
                             // Apply the row props
-                            <tr {...row.getRowProps()}>
+                            <tr
+                                {...row.getRowProps()}
+                                style={
+                                    offline
+                                        ? {
+                                              background: theme.palette.red,
+                                          }
+                                        : undefined
+                                }
+                            >
                                 {
                                     // Loop over the rows cells
                                     row.cells.map((cell) => {
+                                        let style = {};
+
+                                        switch (cell.column.id) {
+                                            case 'black':
+                                                style = {
+                                                    background:
+                                                        theme.palette.primary
+                                                            .darkest,
+                                                };
+                                                break;
+                                            case 'yellow':
+                                                style = {
+                                                    background:
+                                                        theme.palette.yellow,
+                                                };
+                                                break;
+                                            case 'cyan':
+                                                style = {
+                                                    background:
+                                                        theme.palette.blue,
+                                                };
+                                                break;
+                                            case 'magenta':
+                                                style = {
+                                                    background:
+                                                        theme.palette.magenta,
+                                                };
+                                                break;
+
+                                            default:
+                                                break;
+                                        }
+
+                                        if (offline)
+                                            style = {
+                                                background: theme.palette.red,
+                                            };
+
                                         // Apply the cell props
                                         return (
                                             <td
@@ -181,6 +263,7 @@ const Table = (properties: { columns: Columns; data: Data }) => {
                                                 aria-label={
                                                     cell.column.Header as string
                                                 }
+                                                style={style}
                                             >
                                                 {
                                                     // Render the cell contents
@@ -280,8 +363,8 @@ export const PrintersTable = () => {
     }, [printers]);
 
     return (
-        <Styles>
+        <TableStyle>
             <Table columns={columns} data={data} />
-        </Styles>
+        </TableStyle>
     );
 };

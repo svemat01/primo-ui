@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
-import styled from 'styled-components';
+import { useTheme } from 'styled-components';
 
 import { usePrinterStore } from '../hooks/stores/usePrinterStore';
 import { PrinterColor } from '../types/PrinterDataType';
+import { TableStyle } from './TableStyle';
 
 type Columns = {
     Header: string;
@@ -20,116 +21,119 @@ type Data = ({
     [key in PrinterColor]?: string;
 })[];
 
-const Styles = styled.div`
-    padding: 1rem;
+// const Styles = styled.div`
+//     padding: 1rem;
 
-    font-size: 2rem;
+//     font-size: 2rem;
 
-    table {
-        border-spacing: 0;
-        border: 2px solid ${({ theme }) => theme.palette.secondary.default};
+//     table {
+//         border-spacing: 0;
+//         border: 2px solid ${({ theme }) => theme.palette.secondary.default};
 
-        border-radius: 0.8rem;
+//         border-radius: 0.8rem;
 
-        th {
-            background: ${({ theme }) => theme.palette.primary.darker};
-        }
+//         th {
+//             background: ${({ theme }) => theme.palette.primary.darker};
+//         }
 
-        th,
-        td {
-            margin: 0;
-            padding: 0.5rem;
-        }
+//         th,
+//         td {
+//             margin: 0;
+//             padding: 0.5rem;
+//         }
 
-        th {
-            border-bottom: 2px solid
-                ${({ theme }) => theme.palette.secondary.default};
-            border-right: 2px solid
-                ${({ theme }) => theme.palette.secondary.default};
+//         th {
+//             border-bottom: 2px solid
+//                 ${({ theme }) => theme.palette.secondary.default};
+//             border-right: 2px solid
+//                 ${({ theme }) => theme.palette.secondary.default};
 
-            :last-child {
-                border-right: 0;
-            }
-        }
+//             :last-child {
+//                 border-right: 0;
+//             }
+//         }
 
-        tr:first-child th {
-            :first-child {
-                border-top-left-radius: 0.8rem;
-            }
+//         tr:first-child th {
+//             :first-child {
+//                 border-top-left-radius: 0.8rem;
+//             }
 
-            :nth-child(2) {
-                border-top-right-radius: 0.8rem;
-            }
-        }
+//             :nth-child(2) {
+//                 border-top-right-radius: 0.8rem;
+//             }
+//         }
 
-        tr td {
-            :nth-child(2) {
-                border-right: 2px solid
-                    ${({ theme }) => theme.palette.secondary.default};
-            }
+//         tr td {
+//             :nth-child(2) {
+//                 border-right: 2px solid
+//                     ${({ theme }) => theme.palette.secondary.default};
+//             }
 
-            :nth-child(n + 3) {
-                text-align: center;
-            }
-        }
+//             :nth-child(n + 3) {
+//                 text-align: center;
+//             }
+//         }
 
-        @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-            thead {
-                display: none;
-            }
+//         @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+//             thead {
+//                 display: none;
+//             }
 
-            td {
-                display: flex;
+//             td {
+//                 display: flex;
 
-                ::before {
-                    content: attr(aria-label);
-                    font-weight: bold;
-                    width: 120px;
-                    min-width: 120px;
-                }
-            }
+//                 ::before {
+//                     content: attr(aria-label);
+//                     font-weight: bold;
+//                     width: 120px;
+//                     min-width: 120px;
+//                 }
+//             }
 
-            tr {
-                padding: 0 1rem;
-                padding-bottom: 0.5rem;
-                display: block;
+//             tr {
+//                 padding: 0 1rem;
+//                 padding-bottom: 0.5rem;
+//                 display: block;
 
-                border-bottom: 2px solid
-                    ${({ theme }) => theme.palette.secondary.default};
+//                 border-bottom: 2px solid
+//                     ${({ theme }) => theme.palette.secondary.default};
 
-                :last-child {
-                    border-bottom: 0;
-                }
+//                 :last-child {
+//                     border-bottom: 0;
+//                 }
 
-                :first-child td {
-                    border-top-left-radius: 0.8rem;
-                    border-top-right-radius: 0.8rem;
-                }
-                td {
-                    :nth-child(2) {
-                        border-right: 0;
-                    }
+//                 :first-child td {
+//                     border-top-left-radius: 0.8rem;
+//                     border-top-right-radius: 0.8rem;
+//                 }
+//                 td {
+//                     :nth-child(2) {
+//                         border-right: 0;
+//                     }
 
-                    :nth-child(n + 3) {
-                        text-align: left;
-                    }
-                }
+//                     :nth-child(n + 3) {
+//                         text-align: left;
+//                     }
+//                 }
 
-                :nth-child(even) {
-                    background: ${({ theme }) => theme.palette.primary.darker};
+//                 :nth-child(even) {
+//                     background: ${({ theme }) => theme.palette.primary.darker};
 
-                    :last-child {
-                        border-bottom-left-radius: 0.8rem;
-                        border-bottom-right-radius: 0.8rem;
-                        padding-bottom: 0;
-                    }
-                }
-            }
-        }
-    }
-`;
+//                     :last-child {
+//                         border-bottom-left-radius: 0.8rem;
+//                         border-bottom-right-radius: 0.8rem;
+//                         padding-bottom: 0;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// `;
+
 const Table = (properties: { columns: Columns; data: Data }) => {
     const tableInstance = useTable(properties);
+
+    const theme = useTheme();
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         tableInstance;
@@ -173,6 +177,39 @@ const Table = (properties: { columns: Columns; data: Data }) => {
                                 {
                                     // Loop over the rows cells
                                     row.cells.map((cell) => {
+                                        let style = {};
+
+                                        switch (cell.column.id) {
+                                            case 'black':
+                                                style = {
+                                                    background:
+                                                        theme.palette.primary
+                                                            .darkest,
+                                                };
+                                                break;
+                                            case 'yellow':
+                                                style = {
+                                                    background:
+                                                        theme.palette.yellow,
+                                                };
+                                                break;
+                                            case 'cyan':
+                                                style = {
+                                                    background:
+                                                        theme.palette.blue,
+                                                };
+                                                break;
+                                            case 'magenta':
+                                                style = {
+                                                    background:
+                                                        theme.palette.magenta,
+                                                };
+                                                break;
+
+                                            default:
+                                                break;
+                                        }
+
                                         // Apply the cell props
                                         return (
                                             <td
@@ -180,6 +217,7 @@ const Table = (properties: { columns: Columns; data: Data }) => {
                                                 aria-label={
                                                     cell.column.Header as string
                                                 }
+                                                style={style}
                                             >
                                                 {
                                                     // Render the cell contents
@@ -249,12 +287,12 @@ export const RefillTable = () => {
             const printer = printers[printerName];
 
             data.push({
-                name: printerName ?? 'Null',
+                name: printerName ?? '',
                 model: printer.type,
-                black: printer.colors.black?.toString() ?? 'Null',
-                cyan: printer.colors.cyan?.toString() ?? 'Null',
-                magenta: printer.colors.magenta?.toString() ?? 'Null',
-                yellow: printer.colors.yellow?.toString() ?? 'Null',
+                black: printer.colors.black?.toString() ?? '',
+                cyan: printer.colors.cyan?.toString() ?? '',
+                magenta: printer.colors.magenta?.toString() ?? '',
+                yellow: printer.colors.yellow?.toString() ?? '',
             });
         }
 
@@ -262,8 +300,8 @@ export const RefillTable = () => {
     }, [needsRefill]);
 
     return (
-        <Styles>
+        <TableStyle>
             <Table columns={columns} data={data} />
-        </Styles>
+        </TableStyle>
     );
 };

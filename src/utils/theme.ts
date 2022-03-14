@@ -3,6 +3,7 @@ import { DefaultTheme } from 'styled-components';
 export const DarkTheme: DefaultTheme = {
     palette: {
         primary: {
+            darkest: '#1a1a1a',
             darker: '#171717',
             default: '#262626',
             lighter: '#404040',
@@ -11,11 +12,13 @@ export const DarkTheme: DefaultTheme = {
             lighter: '#f5f5f5',
             default: '#e5e5e5',
             darker: '#d4d4d4',
+            darkest: '#a3a3a3',
         },
         blue: '#CFFAFE',
         green: '#DCFCE7',
         red: '#FEE2E2',
         yellow: '#FEF3C7',
+        magenta: '#f3e8ff',
     },
 
     breakpoints: {
@@ -31,8 +34,10 @@ export const LightTheme: DefaultTheme = {
             lighter: '#f5f5f5',
             default: '#e5e5e5',
             darker: '#d4d4d4',
+            darkest: '#a3a3a3',
         },
         secondary: {
+            darkest: '#1a1a1a',
             darker: '#171717',
             default: '#262626',
             lighter: '#404040',
@@ -41,6 +46,7 @@ export const LightTheme: DefaultTheme = {
         green: '#DCFCE7',
         red: '#FEE2E2',
         yellow: '#FEF3C7',
+        magenta: '#f3e8ff',
     },
 
     breakpoints: {
