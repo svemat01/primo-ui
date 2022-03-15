@@ -29,12 +29,16 @@ export const getPrinterData = async () => {
 
     if (!response) return;
 
+    console.log(response);
+
     const { inkThreshold } = usePrinterStore.getState();
 
     let printers: PrinterType = {};
 
     try {
-        printers = await response.data;
+        const data = await response.data;
+
+        printers = data.data ? data.data : data;
     } catch (error) {
         usePrinterStore.setState({ status: 'error', error: `${error}` });
         console.error(error);
@@ -42,7 +46,10 @@ export const getPrinterData = async () => {
         return;
     }
 
-    const firstPrinter = Object.values(printers).at(0);
+    console.log(printers);
+
+    // eslint-disable-next-line unicorn/prefer-at
+    const firstPrinter = Object.values(printers)[0];
 
     if (response.status !== 200) {
         usePrinterStore.setState({
