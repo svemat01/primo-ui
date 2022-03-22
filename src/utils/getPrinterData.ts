@@ -31,7 +31,7 @@ export const getPrinterData = async () => {
 
     console.log(response);
 
-    const { inkThreshold } = usePrinterStore.getState();
+    const inkThreshold = usePersistedStore((state) => state.inkThreshold);
 
     let printers: PrinterType = {};
 
