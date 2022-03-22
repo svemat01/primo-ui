@@ -8,8 +8,6 @@ export const usePrinterStore = createStore<PrinterDataType>((set) => ({
     needsRefill: [],
 
     printers: {},
-    inkThreshold: 20,
-    setInkThreshold: (value: number) => set(() => ({ inkThreshold: value })),
 
     status: 'loading',
     error: null,

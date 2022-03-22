@@ -9,6 +9,9 @@ export type PersistedStoreType = {
 
     primoServerUrl: string;
     setPrimoServerUrl: (value: string) => void;
+
+    inkThreshold: number;
+    setInkThreshold: (threshold: number) => void;
 };
 
 export const usePersistedStore = createStore<PersistedStoreType>(
@@ -22,6 +25,10 @@ export const usePersistedStore = createStore<PersistedStoreType>(
             setPrimoServerUrl: (value: string) => {
                 return set(() => ({ primoServerUrl: value }));
             },
+
+            inkThreshold: 20,
+            setInkThreshold: (value: number) =>
+                set(() => ({ inkThreshold: value })),
         }),
         {
             name: 'settings',

@@ -4,9 +4,6 @@ export type PrinterDataType = {
     needsRefill: string[];
     printers: PrinterType;
 
-    inkThreshold: number;
-    setInkThreshold: (threshold: number) => void;
-
     status: 'loading' | 'loaded' | 'error';
     error: string | null;
 };

@@ -72,7 +72,7 @@ const DoneButton = styled(ButtonStyled)`
     font-size: 2rem;
 `;
 
-const ServerUrlInput = styled.input`
+const SettingInput = styled.input`
     width: 100%;
     min-height: 2.5rem;
 
@@ -89,13 +89,13 @@ const ServerUrlInput = styled.input`
 
     vertical-align: middle;
 `;
-const ServerUrlLabel = styled.label`
+const SettingLabel = styled.label`
     width: 100%;
 
     font-size: 1.75rem;
 `;
 
-const SaveUrlButton = styled(ButtonStyled)`
+const SaveSettingButton = styled(ButtonStyled)`
     font-size: 1.5rem;
 
     margin-left: auto;
@@ -142,6 +142,9 @@ export const SettingsModal: FC<{}> = () => {
     const serverUrl = usePersistedStore((state) => state.primoServerUrl);
     const setServerUrl = usePersistedStore((state) => state.setPrimoServerUrl);
 
+    const inkThreshold = usePersistedStore((state) => state.inkThreshold);
+    const setInkThreshold = usePersistedStore((state) => state.setInkThreshold);
+
     return open ? (
         <>
             <Background onClick={() => setOpen(false)} />
@@ -150,14 +153,14 @@ export const SettingsModal: FC<{}> = () => {
                 <ModalBody>
                     <ModalHeader>Settings</ModalHeader>
 
-                    <ServerUrlLabel>Server URL</ServerUrlLabel>
-                    <ServerUrlInput
+                    <SettingLabel>Server URL</SettingLabel>
+                    <SettingInput
                         value={serverUrl}
                         onChange={(element) =>
                             setServerUrl(element.target.value)
                         }
                     />
-                    <SaveUrlButton
+                    <SaveSettingButton
                         onClick={() => {
                             alert(`Server URL set to ${serverUrl}`);
 
@@ -165,7 +168,29 @@ export const SettingsModal: FC<{}> = () => {
                         }}
                     >
                         Save
-                    </SaveUrlButton>
+                    </SaveSettingButton>
+
+                    <SettingLabel>Ink Threshold</SettingLabel>
+                    <SettingInput
+                        value={inkThreshold}
+                        onChange={(element) =>
+                            setInkThreshold(
+                                Number.parseInt(element.target.value)
+                            )
+                        }
+                        type="number"
+                        min="0"
+                        max="100"
+                    />
+                    <SaveSettingButton
+                        onClick={() => {
+                            alert(`Ink threshold set to ${inkThreshold}`);
+
+                            getPrinterData();
+                        }}
+                    >
+                        Save
+                    </SaveSettingButton>
                 </ModalBody>
                 <ModalFooter>
                     <DoneButton onClick={() => setOpen(false)}>Done</DoneButton>
